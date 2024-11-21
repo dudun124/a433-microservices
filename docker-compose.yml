@@ -1,0 +1,37 @@
+version: '2.4'
+
+services:
+  item-app:
+    # Menggunakan image Docker dari Docker Hub atau GitHub Packages
+    image: hamdanrizza/item-app:v1
+    
+    # Menggunakan port mapping agar aplikasi dapat diakses melalui port 80 di host
+    ports:
+      - "8080:8080"
+
+    # Menentukan environment variables untuk aplikasi
+    environment:
+      NODE_ENV: production
+      DB_HOST: item-db
+
+    # Mengatur agar item-app hanya berjalan setelah item-db diluncurkan
+    depends_on:
+      - item-db
+
+    # Menambahkan restart policy agar container selalu restart jika terhenti
+    restart: always
+
+  item-db:
+    # Menggunakan image MongoDB dari Docker Hub
+    image: mongo:3
+
+    # Menggunakan volume untuk persistent storage
+    volumes:
+      - app-db:/data/db
+
+    # Menambahkan restart policy untuk database
+    restart: always
+
+# Mendefinisikan volume yang digunakan oleh container
+volumes:
+  app-db:
